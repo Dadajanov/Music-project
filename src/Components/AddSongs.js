@@ -1,20 +1,22 @@
 import { AddBoxOutlined, Link } from "@mui/icons-material";
 import { Button, InputAdornment, TextField } from "@mui/material";
-import { makeStyles } from '@mui/styles';
+import { useState } from "react";
 
-const useStyles = makeStyles({
-  text: {
-    color: '#FFFFFF'
-  }
-});
 
 const AddSongs = () => {
-  const classes = useStyles()
+  const [showModal, setShowModal] = useState(false)
+
+  const handleClick = () => {
+    setShowModal(true)
+  }
+
+  const handleOnClose = () => {
+    setShowModal(false)
+  }
   return (
     <div>
       <TextField
         color="color1"
-        className={classes.text}
         placeholder="Add YouTube url"
         fullWidth
         margin="normal"
@@ -29,12 +31,17 @@ const AddSongs = () => {
         }}
       />
       <Button
+        onClick={handleClick}
         variant="contained"
         color="color1"
         endIcon={<AddBoxOutlined />}
       >
         Add
       </Button>
+      {/* <Modal
+        isOpen={showModal}
+        onClose={handleOnClose}
+      /> */}
     </div>
   )
 };
