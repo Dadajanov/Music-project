@@ -13,7 +13,7 @@ const useStyles = makeStyles({
 const Header = () => {
   const classes = useStyles()
   return (
-    <AppBar position="fixed" color="color1">
+    <AppBar position="fixed" color="color1" enableColorOnDark>
       <Toolbar>
         <HeadsetTwoTone color="white" />
         <Typography className={classes.title} variant="h6" component="h1">

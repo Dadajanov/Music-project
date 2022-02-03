@@ -1,8 +1,45 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+}
+
 body {
   background-color: #212322 !important;
   color: #ffffff !important;
 }
 
-input {
+input,
+button {
+  padding-top: 8px !important;
   color: #ffffff !important;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  box-shadow: 0 0 0 100px #08777aab inset !important;
+  -webkit-text-fill-color: #212322;
+}
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(78, 78, 78);
+  border-radius: 5px;
+  height: 250px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(87, 85, 85);
 }
