@@ -28,10 +28,10 @@ const Song = (props) => {
       <CardMedia image={props.image} className={classes.thumbnail} />
       <div className={classes.songInfo}>
         <CardContent>
-          <Typography gutterBottm variant="h5" component="h2">
+          <Typography gutterbottom='true' variant="h5" component="h2">
             {props.title}
           </Typography>
-          <Typography gutterBottm variant="body1" component="p">
+          <Typography gutterbottom='true' variant="body1" component="p">
             {props.artist}
           </Typography>
         </CardContent>

@@ -10,12 +10,20 @@ function App() {
   return (
     <Fragment>
       <Header />
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={7} style={{ paddingTop: '80px' }}>
+      <Grid container spacing={2} style={{ paddingTop: '80px' }}>
+        <Grid item xs={12} md={7}>
           <AddSongs />
           <SongList />
         </Grid>
-        <Grid item xs={12} md={5}>
+        <Grid item
+          xs={12}
+          md={5}
+          style={{
+            position: 'fixed',
+            width: '100%',
+            right: 0,
+          }}
+        >
           <SongPlayer />
         </Grid>
       </Grid>

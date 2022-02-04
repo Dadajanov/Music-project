@@ -15,7 +15,7 @@ const useStyles = makeStyles({
     margin: '10px !important',
   },
   urlInput: {
-    backgroundColor: 'transparent !important'
+    backgroundColor: 'transparent !important',
   },
   addSongButton: {
     margin: '10px'
@@ -45,6 +45,12 @@ const AddSongs = () => {
         margin="normal"
         variant="filled"
         type="url"
+        inputProps={{
+          sx: {
+            backgroundColor: 'transparent !important',
+            paddingTop: '8px !important'
+          },
+        }}
         InputProps={{
           className: `${classes.urlInput}`,
           startAdornment: (

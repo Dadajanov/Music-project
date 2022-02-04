@@ -17,6 +17,17 @@ const SongList = () => {
     return (
       <div>
         <Song image={mile8} title='Lose Your Self' artist='Eminem' />
+        <Song image={mile8} title='Lose Your Self' artist='Eminem' />
+        <Song image={mile8} title='Lose Your Self' artist='Eminem' />
+        <Song image={mile8} title='Lose Your Self' artist='Eminem' />
+        <Song image={mile8} title='Lose Your Self' artist='Eminem' />
+        <Song image={mile8} title='Lose Your Self' artist='Eminem' />
+        <Song image={mile8} title='Lose Your Self' artist='Eminem' />
+        <Song image={mile8} title='Lose Your Self' artist='Eminem' />
+        <Song image={mile8} title='Lose Your Self' artist='Eminem' />
+        <Song image={mile8} title='Lose Your Self' artist='Eminem' />
+        <Song image={mile8} title='Lose Your Self' artist='Eminem' />
+        <Song image={mile8} title='Lose Your Self' artist='Eminem' />
       </div>
     )
   }

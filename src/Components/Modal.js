@@ -22,8 +22,14 @@ const Modal = (props) => {
         placeholder="Enter Title"
         color="color1"
         variant="filled"
-        sx={{ backgroundColor: 'inherit' }}
+        hiddenLabel="true"
         fullWidth
+        InputProps={{
+          sx: {
+            backgroundColor: 'inherit',
+            paddingTop: '15px'
+          }
+        }}
       />
       <TextField
         margin="dense"
@@ -33,6 +39,9 @@ const Modal = (props) => {
         color="color1"
         variant="filled"
         fullWidth
+        InputProps={{
+          sx: { backgroundColor: 'inherit' }
+        }}
       />
       <TextField
         margin="dense"
@@ -42,17 +51,16 @@ const Modal = (props) => {
         color="color1"
         variant="filled"
         fullWidth
+        InputProps={{
+          sx: { backgroundColor: 'inherit' }
+        }}
       />
     </DialogContent>
     <DialogActions>
       <Button onClick={handleOnCloseDialog} color="color2" variant="contained" enableColorOnDark>
         Cancel
       </Button >
-      <Button
-        onClick={handleOnAddSongialog}
-        color="color1"
-        variant="contained"
-      >
+      <Button onClick={handleOnAddSongialog} color="color1" variant="contained">
         Add Song
       </Button>
     </DialogActions>
