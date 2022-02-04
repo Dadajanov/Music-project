@@ -9,16 +9,16 @@ const useStyles = makeStyles({
     display: 'flex',
     alignItems: 'center',
     margin: '16px 0 8px',
-    paddingTop: 0
+    padding: '0 15px'
   },
   urlInputWrapper: {
-    margin: '10px !important',
+    margin: '10px 10px 10px 0 !important ',
   },
   urlInput: {
     backgroundColor: 'transparent !important',
   },
   addSongButton: {
-    margin: '10px'
+    paddingRight: ' 0 10px'
   },
 
 });

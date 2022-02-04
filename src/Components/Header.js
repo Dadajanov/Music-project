@@ -2,7 +2,6 @@ import { AppBar, Toolbar, Typography } from "@mui/material";
 import { makeStyles } from '@mui/styles';
 import { HeadsetTwoTone } from '@mui/icons-material';
 const useStyles = makeStyles({
-
   title: {
     marginLeft: '10px !important',
     color: '#FFFFFF'
