@@ -1,12 +1,11 @@
-import { useQuery } from "@apollo/react-hooks";
+import { useSubscription } from "@apollo/react-hooks";
 import { SpinnerRoundFilled } from "spinners-react";
-import mile8 from '../assets/8-mile.jpg'
-import { GET_SONGS } from "../graphql/queries";
+import { GET_SONGS } from "../graphql/subscriptions";
 import Song from "./Song";
 
 const SongList = () => {
 
-  const { data, loading, error } = useQuery(GET_SONGS);
+  const { data, loading, error } = useSubscription(GET_SONGS);
 
   if (loading) {
     return <div style={{
@@ -23,7 +22,7 @@ const SongList = () => {
   console.log(data)
   return (
     <div>
-      {data.songs.map(song => {
+      {data.Songs.map(song => {
         return <Song key={song.id} title={song.title} artist={song.artist} image={song.thumbnail} />
       })}
     </div>
