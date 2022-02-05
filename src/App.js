@@ -1,17 +1,21 @@
-import { Fragment } from 'react';
+import { Fragment, useContext, useReducer } from 'react';
 import './App.css';
 import Header from './Components/Header';
 import { Grid, useMediaQuery } from '@mui/material';
 import AddSongs from './Components/AddSongs';
 import SongList from './Components/SongList';
 import SongPlayer from './Components/SongPlayer';
+import { SongContext } from './Context/Context';
+import SongReducer from './Context/reducer';
 
 function App() {
+  const initialSongState = useContext(SongContext)
+  const [state, dispatch] = useReducer(SongReducer, initialSongState)
   const greaterThanMd = useMediaQuery('(min-width:900px)')
   const greaterThanSm = useMediaQuery('(min-width:600px)')
 
   return (
-    <Fragment>
+    <SongContext.Provider value={{ state, dispatch }}>
       {greaterThanSm && <Header />}
       <Grid container style={{ paddingTop: greaterThanSm ? '80px' : '10px' }}>
         <Grid item xs={12} md={7} >
@@ -41,7 +45,7 @@ function App() {
           <SongPlayer />
         </Grid>
       </Grid>
-    </Fragment>
+    </SongContext.Provider>
   )
 }
 
