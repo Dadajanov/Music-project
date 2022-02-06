@@ -1,3 +1,4 @@
+import { useQuery } from "@apollo/react-hooks";
 import { Pause, PlayArrow, SkipNext, SkipPrevious } from "@mui/icons-material";
 import {
   Card,
@@ -8,9 +9,11 @@ import {
   Typography
 } from "@mui/material";
 import { makeStyles } from '@mui/styles';
-import { Fragment, useContext } from "react";
+import { Fragment, useContext, useState } from "react";
 import { SongContext } from "../Context/Context";
+import { GET_SAVEDMUSIC_SONGS } from "../graphql/queries";
 import SavedPlayList from "./SavedPlayList";
+import ReactPlayer from "react-player";
 
 const useStyle = makeStyles({
   container: {
@@ -41,12 +44,19 @@ const useStyle = makeStyles({
 })
 
 const SongPlayer = (props) => {
-  const { state, dispatch } = useContext(SongContext)
-  const classes = useStyle()
-
+  const classes = useStyle();
+  const { state, dispatch } = useContext(SongContext);
+  const [played, setPlayed] = useState(0);
+  const { data } = useQuery(GET_SAVEDMUSIC_SONGS);
+  const [seeking, setSeeking] = useState(false)
   const handleTogglePlay = () => {
     dispatch(state.isPlaying ? { type: 'PAUSE_SONG' } : { type: 'PLAY_SONG' })
-  }
+  };
+
+  const handleProgressChange = (event, newValue) => {
+    setPlayed(newValue)
+  };
+
   return (
     <Fragment>
       <Card variant="outlined" className={classes.container}>
@@ -75,18 +85,29 @@ const SongPlayer = (props) => {
             </Typography>
           </div>
           <Slider
+            onChange={handleProgressChange}
+            value={played}
             type="range"
             min={0}
             max={1}
             step={0.01}
           />
         </div>
+        <ReactPlayer
+          onProgress={({ played, playedSeconds }) => {
+            setPlayed(played)
+          }}
+          url={state.song.url}
+          playing={state.isPlaying}
+          width='0'
+          height='0'
+        />
         <CardMedia
           className={classes.thumbnail}
           image={state.song.thumbnail}
         />
       </Card>
-      <SavedPlayList />
+      <SavedPlayList savedMusic={data.savedMusic} />
     </Fragment>
   )
 };

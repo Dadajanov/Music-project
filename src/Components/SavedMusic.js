@@ -1,7 +1,8 @@
+import { useMutation } from "@apollo/react-hooks";
 import { Delete } from "@mui/icons-material";
 import { Avatar, IconButton, Typography } from "@mui/material";
-import mile8 from '../assets/8-mile.jpg'
 import { makeStyles } from "@mui/styles";
+import { ADD_OR_REMOVE_FROM_SAVEDMUSIC } from "../graphql/mutations";
 
 const useStyle = makeStyles({
   avatar: {
@@ -26,21 +27,39 @@ const useStyle = makeStyles({
   }
 })
 
-const SavedMusic = (props) => {
-  const classes = useStyle()
+const SavedMusic = ({ song }) => {
+  const classes = useStyle();
+  const [addOrRemoveFromSavedMusic] = useMutation(ADD_OR_REMOVE_FROM_SAVEDMUSIC, {
+    onCompleted: data => {
+      localStorage.setItem('savedMusic', JSON.stringify(data.addOrRemoveFromSavedMusic))
+    }
+  });
+
+  const handleAddToSavedMusic = () => {
+    addOrRemoveFromSavedMusic({
+      variables: {
+        input: {
+          ...song,
+          __typename: 'Song'
+        }
+      }
+    })
+  }
+
+  const { thumbnail, title, artist } = song
 
   return (
     <div className={classes.container}>
-      <Avatar src={mile8} alt='Song thumbnail' className={classes.avatar} />
+      <Avatar src={thumbnail} alt='Song thumbnail' className={classes.avatar} />
       <div className={classes.songInfoContainer}>
         <Typography variant='subtitle2' className={classes.text}>
-          {props.title}
+          {title}
         </Typography>
         <Typography color="textSecondary" variant='body2'>
-          {props.artist}
+          {artist}
         </Typography>
       </div>
-      <IconButton>
+      <IconButton onClick={handleAddToSavedMusic}>
         <Delete color='color2' />
       </IconButton>
     </div>

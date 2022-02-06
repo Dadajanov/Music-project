@@ -1,8 +1,10 @@
+import { useMutation } from "@apollo/react-hooks";
 import { Pause, PlayArrow, Save } from "@mui/icons-material";
 import { Card, CardActions, CardContent, CardMedia, IconButton, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { useContext, useEffect, useState } from "react";
 import { SongContext } from "../Context/Context";
+import { ADD_OR_REMOVE_FROM_SAVEDMUSIC } from "../graphql/mutations";
 
 const useStyle = makeStyles({
   container: {
@@ -24,23 +26,39 @@ const useStyle = makeStyles({
   }
 })
 const Song = (props) => {
-  const classes = useStyle()
-  const { thumbnail, artist, title, id } = props.song
-  const [currentSongPlaying, setCurrentSongPlaying] = useState(false)
-  const { state, dispatch } = useContext(SongContext)
+  const classes = useStyle();
+  const { thumbnail, artist, title, id } = props.song;
+  const [addOrRemoveFromSavedMusic] = useMutation(ADD_OR_REMOVE_FROM_SAVEDMUSIC, {
+    onCompleted: data => {
+      localStorage.setItem('savedMusic', JSON.stringify(data.addOrRemoveFromSavedMusic))
+    }
+  });
+  const [currentSongPlaying, setCurrentSongPlaying] = useState(false);
+  const { state, dispatch } = useContext(SongContext);
 
   useEffect(() => {
     const isSongPlaying = state.isPlaying && id === state.song.id
     setCurrentSongPlaying(isSongPlaying)
-  }, [id, state.song.id, state.isPlaying])
+  }, [id, state.song.id, state.isPlaying]);
 
   const handleTogglePlay = () => {
     dispatch({
       type: 'SET_SONG',
       payload: props.song
-    })
-    dispatch(state.isPlaying ? { type: 'PAUSE_SONG' } : { type: 'PLAY_SONG' })
-  }
+    });
+    dispatch(state.isPlaying ? { type: 'PAUSE_SONG' } : { type: 'PLAY_SONG' });
+  };
+
+  const handleAddToSavedMusic = () => {
+    addOrRemoveFromSavedMusic({
+      variables: {
+        input: {
+          ...props.song,
+          __typename: 'Song'
+        }
+      }
+    });
+  };
 
   return <Card className={classes.container}>
     <div className={classes.songInfoContainer}>
@@ -58,7 +76,7 @@ const Song = (props) => {
           <IconButton size="small" color="color1" onClick={handleTogglePlay}>
             {currentSongPlaying ? <Pause color="color1" /> : <PlayArrow color="color1" />}
           </IconButton>
-          <IconButton size="small" color="color2">
+          <IconButton onClick={handleAddToSavedMusic} size="small" color="color2">
             <Save color="color2" />
           </IconButton>
         </CardActions>

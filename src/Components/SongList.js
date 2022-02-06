@@ -4,7 +4,6 @@ import { GET_SONGS } from "../graphql/subscriptions";
 import Song from "./Song";
 
 const SongList = () => {
-
   const { data, loading, error } = useSubscription(GET_SONGS);
 
   if (loading) {
