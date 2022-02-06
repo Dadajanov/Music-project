@@ -4,7 +4,7 @@ import { Card, CardActions, CardContent, CardMedia, IconButton, Typography } fro
 import { makeStyles } from "@mui/styles";
 import { useContext, useEffect, useState } from "react";
 import { SongContext } from "../Context/Context";
-import { ADD_OR_REMOVE_FROM_SAVEDMUSIC } from "../graphql/mutations";
+import { ADD_OR_REMOVE_FROM_QUEUE } from "../graphql/mutations";
 
 const useStyle = makeStyles({
   container: {
@@ -28,9 +28,9 @@ const useStyle = makeStyles({
 const Song = (props) => {
   const classes = useStyle();
   const { thumbnail, artist, title, id } = props.song;
-  const [addOrRemoveFromSavedMusic] = useMutation(ADD_OR_REMOVE_FROM_SAVEDMUSIC, {
+  const [addOrRemoveFromQueue] = useMutation(ADD_OR_REMOVE_FROM_QUEUE, {
     onCompleted: data => {
-      localStorage.setItem('savedMusic', JSON.stringify(data.addOrRemoveFromSavedMusic))
+      localStorage.setItem('Queue', JSON.stringify(data.addOrRemoveFromQueue))
     }
   });
   const [currentSongPlaying, setCurrentSongPlaying] = useState(false);
@@ -49,8 +49,8 @@ const Song = (props) => {
     dispatch(state.isPlaying ? { type: 'PAUSE_SONG' } : { type: 'PLAY_SONG' });
   };
 
-  const handleAddToSavedMusic = () => {
-    addOrRemoveFromSavedMusic({
+  const handleAddToQueue = () => {
+    addOrRemoveFromQueue({
       variables: {
         input: {
           ...props.song,
@@ -76,7 +76,7 @@ const Song = (props) => {
           <IconButton size="small" color="color1" onClick={handleTogglePlay}>
             {currentSongPlaying ? <Pause color="color1" /> : <PlayArrow color="color1" />}
           </IconButton>
-          <IconButton onClick={handleAddToSavedMusic} size="small" color="color2">
+          <IconButton onClick={handleAddToQueue} size="small" color="color2">
             <Save color="color2" />
           </IconButton>
         </CardActions>

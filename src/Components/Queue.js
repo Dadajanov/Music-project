@@ -2,7 +2,7 @@ import { useMutation } from "@apollo/react-hooks";
 import { Delete } from "@mui/icons-material";
 import { Avatar, IconButton, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { ADD_OR_REMOVE_FROM_SAVEDMUSIC } from "../graphql/mutations";
+import { ADD_OR_REMOVE_FROM_QUEUE } from "../graphql/mutations";
 
 const useStyle = makeStyles({
   avatar: {
@@ -27,16 +27,16 @@ const useStyle = makeStyles({
   }
 })
 
-const SavedMusic = ({ song }) => {
+const Queue = ({ song }) => {
   const classes = useStyle();
-  const [addOrRemoveFromSavedMusic] = useMutation(ADD_OR_REMOVE_FROM_SAVEDMUSIC, {
+  const [addOrRemoveFromQueue] = useMutation(ADD_OR_REMOVE_FROM_QUEUE, {
     onCompleted: data => {
-      localStorage.setItem('savedMusic', JSON.stringify(data.addOrRemoveFromSavedMusic))
+      localStorage.setItem('Queue', JSON.stringify(data.addOrRemoveFromQueue))
     }
   });
 
-  const handleAddToSavedMusic = () => {
-    addOrRemoveFromSavedMusic({
+  const handleAddToQueue = () => {
+    addOrRemoveFromQueue({
       variables: {
         input: {
           ...song,
@@ -59,11 +59,11 @@ const SavedMusic = ({ song }) => {
           {artist}
         </Typography>
       </div>
-      <IconButton onClick={handleAddToSavedMusic}>
+      <IconButton onClick={handleAddToQueue}>
         <Delete color='color2' />
       </IconButton>
     </div>
   )
 };
 
-export default SavedMusic
+export default Queue

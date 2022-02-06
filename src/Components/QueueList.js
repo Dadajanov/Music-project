@@ -1,8 +1,8 @@
 import { Typography, useMediaQuery } from "@mui/material";
 import { Fragment } from "react";
-import SavedMusic from "./SavedMusic";
+import Queue from "./Queue";
 
-const SavedPlayList = ({ savedMusic }) => {
+const QueueList = ({ queue }) => {
   const greaterThanMd = useMediaQuery('(min-width:900px)');
 
   return (
@@ -10,14 +10,14 @@ const SavedPlayList = ({ savedMusic }) => {
       {greaterThanMd &&
         <Fragment>
           <Typography color='textSecondary' variant="button">
-            SAVED MUSICS ({savedMusic.length})
+            QUEUE ({queue.length})
           </Typography>
-          {savedMusic.map(song => {
-            return <SavedMusic key={song.id} song={song} />
+          {queue.map(song => {
+            return <Queue key={song.id} song={song} />
           })}
         </Fragment>}
     </div>
   )
 };
 
-export default SavedPlayList;
+export default QueueList;

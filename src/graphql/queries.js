@@ -1,8 +1,8 @@
 import { gql } from "apollo-boost";
 
-export const GET_SAVEDMUSIC_SONGS = gql`
+export const GET_Queue_SONGS = gql`
   query getSavedSongs {
-      savedMusic @client{
+      Queue @client{
         id
         title
         artist

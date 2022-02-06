@@ -2,7 +2,7 @@ import ApolloClient from 'apollo-client';
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { SubscriptionClient } from 'subscriptions-transport-ws';
 import { gql } from 'apollo-boost';
-import { GET_SAVEDMUSIC_SONGS } from './queries';
+import { GET_Queue_SONGS } from './queries';
 
 
 const wsClient = new SubscriptionClient('wss://alive-cockatoo-46.hasura.app/v1/graphql', {
@@ -37,32 +37,32 @@ const client = new ApolloClient({
     }
 
     type Query{
-      savedMusic:[Song]!
+      Queue:[Song]!
     }
 
     type Mutation{
-      addOrRemoveFromSavedMusic(input: SongInput!):[Song]!
+      addOrRemoveFromQueue(input: SongInput!):[Song]!
     }
   `,
   resolvers: {
     Mutation: {
-      addOrRemoveFromSavedMusic: (_, { input }, { cache }) => {
+      addOrRemoveFromQueue: (_, { input }, { cache }) => {
         const queryResult = cache.readQuery({
-          query: GET_SAVEDMUSIC_SONGS
+          query: GET_Queue_SONGS
         })
         if (queryResult) {
-          const { savedMusic } = queryResult;
-          const isInSavedMusic = savedMusic.some(song => song.id === input.id);
-          const newSavedMusic = isInSavedMusic ?
-            savedMusic.filter(song => song.id !== input.id)
-            : [...savedMusic, input];
+          const { Queue } = queryResult;
+          const isInQueue = Queue.some(song => song.id === input.id);
+          const newQueue = isInQueue ?
+            Queue.filter(song => song.id !== input.id)
+            : [...Queue, input];
           cache.writeQuery({
-            query: GET_SAVEDMUSIC_SONGS,
+            query: GET_Queue_SONGS,
             data: {
-              savedMusic: newSavedMusic
+              Queue: newQueue
             }
           })
-          return newSavedMusic;
+          return newQueue;
         }
         return [];
       }
@@ -73,10 +73,10 @@ const client = new ApolloClient({
   }
 });
 
-const hasSavedMusic = Boolean(localStorage.getItem('savedMusic'))
+const hasQueue = Boolean(localStorage.getItem('Queue'))
 
 const data = {
-  savedMusic: hasSavedMusic ? JSON.parse(localStorage.getItem('savedMusic')) : []
+  Queue: hasQueue ? JSON.parse(localStorage.getItem('Queue')) : []
 }
 
 client.writeData({ data })
