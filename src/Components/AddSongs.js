@@ -86,7 +86,6 @@ const AddSongs = () => {
   const getSoudCloudInfo = (player) => {
     return new Promise(resolve => {
       player.getCurrentSound(songData => {
-        console.log(songData);
         if (songData) {
           resolve({
             duratin: Number(songData.duration / 1000),

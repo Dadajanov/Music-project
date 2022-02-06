@@ -19,11 +19,10 @@ const SongList = () => {
 
   if (error) return <div> Error fetching songs </div>
 
-  console.log(data)
   return (
     <div>
       {data.Songs.map(song => {
-        return <Song key={song.id} title={song.title} artist={song.artist} image={song.thumbnail} />
+        return <Song key={song.id} song={song} />
       })}
     </div>
   )

@@ -1,6 +1,8 @@
-import { PlayArrow, Save } from "@mui/icons-material";
+import { Pause, PlayArrow, Save } from "@mui/icons-material";
 import { Card, CardActions, CardContent, CardMedia, IconButton, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+import { useContext, useEffect, useState } from "react";
+import { SongContext } from "../Context/Context";
 
 const useStyle = makeStyles({
   container: {
@@ -23,21 +25,38 @@ const useStyle = makeStyles({
 })
 const Song = (props) => {
   const classes = useStyle()
+  const { thumbnail, artist, title, id } = props.song
+  const [currentSongPlaying, setCurrentSongPlaying] = useState(false)
+  const { state, dispatch } = useContext(SongContext)
+
+  useEffect(() => {
+    const isSongPlaying = state.isPlaying && id === state.song.id
+    setCurrentSongPlaying(isSongPlaying)
+  }, [id, state.song.id, state.isPlaying])
+
+  const handleTogglePlay = () => {
+    dispatch({
+      type: 'SET_SONG',
+      payload: props.song
+    })
+    dispatch(state.isPlaying ? { type: 'PAUSE_SONG' } : { type: 'PLAY_SONG' })
+  }
+
   return <Card className={classes.container}>
     <div className={classes.songInfoContainer}>
-      <CardMedia image={props.image} className={classes.thumbnail} />
+      <CardMedia image={thumbnail} className={classes.thumbnail} />
       <div className={classes.songInfo}>
         <CardContent>
           <Typography gutterbottom='true' variant="h5" component="h2">
-            {props.title}
+            {title}
           </Typography>
           <Typography gutterbottom='true' variant="body1" component="p">
-            {props.artist}
+            {artist}
           </Typography>
         </CardContent>
         <CardActions>
-          <IconButton size="small" color="color1">
-            <PlayArrow color="color1" />
+          <IconButton size="small" color="color1" onClick={handleTogglePlay}>
+            {currentSongPlaying ? <Pause color="color1" /> : <PlayArrow color="color1" />}
           </IconButton>
           <IconButton size="small" color="color2">
             <Save color="color2" />

@@ -1,4 +1,4 @@
-import { Fragment, useContext, useReducer } from 'react';
+import { useContext, useReducer } from 'react';
 import './App.css';
 import Header from './Components/Header';
 import { Grid, useMediaQuery } from '@mui/material';
@@ -6,7 +6,7 @@ import AddSongs from './Components/AddSongs';
 import SongList from './Components/SongList';
 import SongPlayer from './Components/SongPlayer';
 import { SongContext } from './Context/Context';
-import SongReducer from './Context/reducer';
+import SongReducer from './Reducer/reducer';
 
 function App() {
   const initialSongState = useContext(SongContext)

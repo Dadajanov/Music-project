@@ -9,34 +9,29 @@ const Modal = (props) => {
     props.onClose()
   };
   const handleOnAddSongialog = async () => {
-    try {
-      const { url, thumbnail, duration, title, artist } = props.song
+    const { url, thumbnail, duration, title, artist } = props.song
 
-      await addSong({
-        variables: {
-          url: url.length > 0 ? url : null,
-          thumbnail: thumbnail.length > 0 ? thumbnail : null,
-          duration: duration > 0 ? duration : null,
-          title: title.length > 0 ? title : null,
-          artist: artist.length > 0 ? artist : null,
-        }
-      })
-      props.onClose()
-      props.setSong({
-        duration: 0,
-        title: '',
-        artist: '',
-        thumbnail: '',
-      })
-      props.setUrl('')
-    } catch (error) {
-      console.error('Error adding song', error)
-    }
+    await addSong({
+      variables: {
+        url: url.length > 0 ? url : null,
+        thumbnail: thumbnail.length > 0 ? thumbnail : null,
+        duration: duration > 0 ? duration : null,
+        title: title.length > 0 ? title : null,
+        artist: artist.length > 0 ? artist : null,
+      }
+    })
+    props.onClose()
+    props.setSong({
+      duration: 0,
+      title: '',
+      artist: '',
+      thumbnail: '',
+    })
+    props.setUrl('')
   };
 
   const handleChangeSong = (event) => {
     const { name, value } = event.target
-    console.log(event.target);
     props.setSong(prevSong => ({
       ...prevSong,
       [name]: value
@@ -44,10 +39,11 @@ const Modal = (props) => {
   }
 
   const handleError = (field) => {
-    return error?.graphQLErrors[0]?.extensions?.path.includes(field);
+    return error?.networkError?.extensions?.path.includes(field);
   }
 
-  const { thumbnail, artist, title } = props.song
+  const { thumbnail, artist, title } = props.song;
+
   return <Dialog
     open={props.onOpen}
     onClose={props.onClose}
