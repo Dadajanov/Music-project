@@ -52,10 +52,10 @@ const SongPlayer = (props) => {
   const [playedSeconds, setPlayedSeconds] = useState(0);
   const [positionInQueue, setPositionInQueue] = useState(0);
   const [seeking, setSeeking] = useState(false)
-  const [volume, setVolume] = useState(JSON.parse(localStorage.getItem('volume'))?.volume || 0.5)
-  const [volumeOff, setVolumeOff] = useState({
+  const [volume, setVolume] = useState({
     muted: false,
-    volume: volume
+    volumeOff: 0,
+    volume: JSON.parse(localStorage.getItem('volume')).volume || 0.5
   })
 
   useEffect(() => {
@@ -119,26 +119,27 @@ const SongPlayer = (props) => {
   };
 
   const handleToggleVolumeOff = () => {
-    setVolumeOff(prevState => ({
+    setVolume(prevState => ({
       muted: !prevState.muted,
-      volume: volume,
+      volume: volume.volume,
       volumeOff: 0,
     }
     ))
-    localStorage.setItem('volume', JSON.stringify(volumeOff))
-    setVolume(volumeOff.volumeOff)
-    console.log(volumeOff.volume);
-    if (volumeOff) {
-      const voluemeData = JSON.parse(localStorage.getItem('volume'))
-      setVolume(voluemeData.volume);
-    }
+    localStorage.setItem('volume', JSON.stringify(volume))
+    setVolume(prevState => ({
+      ...prevState,
+    }));
   };
+  console.log(volume);
 
   const handleOnChangeVolume = (event, newValue) => {
-    setVolume(newValue)
-    localStorage.setItem('volume', JSON.stringify({ volume: volume, muted: volumeOff.muted }))
+    setVolume(prevState => ({
+      ...prevState,
+      volume: newValue
+    }))
+    localStorage.setItem('volume', JSON.stringify(volume))
     if (newValue > 0) {
-      setVolumeOff(prevState => ({
+      setVolume(prevState => ({
         ...prevState,
         muted: false
       }))
@@ -174,7 +175,7 @@ const SongPlayer = (props) => {
           </div>
           <div style={{ display: 'flex', flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
             <IconButton onClick={handleToggleVolumeOff}>
-              {volumeOff.muted || volume === 0 ?
+              {volume.muted || volume === 0 ?
                 <VolumeOff />
                 : volume > 50 ?
                   <VolumeUp />
@@ -184,7 +185,7 @@ const SongPlayer = (props) => {
             <Slider
               aria-label="Volume"
               size='small'
-              value={volume}
+              value={volume.muted ? volume.volumeOff : volume.volume}
               style={{ height: '20%' }}
               min={0}
               max={1}
@@ -207,7 +208,7 @@ const SongPlayer = (props) => {
           ref={ReactPlayerRef}
           url={state.song.url}
           playing={state.isPlaying}
-          volume={volume}
+          volume={volume.muted ? volume.volumeOff : volume.volume}
           width='0'
           height='0'
         />
