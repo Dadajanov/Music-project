@@ -16,10 +16,6 @@ import QueueList from "./QueueList";
 import ReactPlayer from "react-player";
 
 const useStyle = makeStyles({
-  container: {
-    display: 'flex',
-    justifyContent: 'space-between'
-  },
   details: {
     display: 'flex',
     flexDirection: 'column',
@@ -29,16 +25,25 @@ const useStyle = makeStyles({
     flex: '1 0 auto'
   },
   thumbnail: {
-    width: 150,
+    width: '90px',
+    height: '90px',
   },
   controls: {
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     padding: '0 8px',
   },
   playIcon: {
     height: '38px',
     width: '38px',
+  },
+  volume: {
+    display: 'flex',
+    flexDirection: "row",
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%'
   }
 
 })
@@ -50,6 +55,7 @@ const SongPlayer = (props) => {
   const ReactPlayerRef = useRef()
   const [played, setPlayed] = useState(0);
   const [playedSeconds, setPlayedSeconds] = useState(0);
+  const [duration, setDuration] = useState(0);
   const [positionInQueue, setPositionInQueue] = useState(0);
   const [seeking, setSeeking] = useState(false)
   const [volume, setVolume] = useState({
@@ -97,7 +103,11 @@ const SongPlayer = (props) => {
   };
 
   const formatDuration = (seconds) => {
-    return new Date(seconds * 1000).toISOString().substring(11, 19)
+    return new Date(seconds * 1000).toISOString().substring(14, 19)
+  }
+
+  const DurationOfSong = (seconds) => {
+    setDuration(new Date(seconds * 1000).toISOString().substring(14, 19));
   }
 
   const handlePlayPrevSong = () => {
@@ -130,7 +140,7 @@ const SongPlayer = (props) => {
       ...prevState,
     }));
   };
-  console.log(volume);
+
 
   const handleOnChangeVolume = (event, newValue) => {
     setVolume(prevState => ({
@@ -150,58 +160,72 @@ const SongPlayer = (props) => {
     <Fragment>
       <Card variant="outlined" className={classes.container}>
         <div className={classes.details}>
-          <CardContent className={classes.contant}>
-            <Typography variant="h5" component="h3">
-              {state.song.title}
-            </Typography>
-            <Typography variant="subtitle1" component="p" color="textSecondary">
-              {state.song.artist}
-            </Typography>
-          </CardContent>
-          <div className={classes.controls}>
-            <IconButton onClick={handlePlayPrevSong}>
-              <SkipPrevious />
-            </IconButton>
-            <IconButton onClick={handleTogglePlay}>
-              {state.isPlaying ? <Pause className={classes.playIcon} /> : <PlayArrow className={classes.playIcon} />}
-            </IconButton>
-            <IconButton onClick={handlePlayNextSong}>
-              <SkipNext />
-            </IconButton>
-            <Typography variant="subtitle1" component="p"
-              color="textSecondary">
-              {formatDuration(playedSeconds)}
-            </Typography>
+          <div style={{ display: 'flex', padding: "15px 0 0" }}>
+            <CardMedia
+              className={classes.thumbnail}
+              image={state.song.thumbnail}
+            />
+            <CardContent className={classes.contant}>
+              <Typography variant="h5" component="h3">
+                {state.song.title}
+              </Typography>
+              <Typography variant="subtitle1" component="p" color="textSecondary">
+                {state.song.artist}
+              </Typography>
+            </CardContent>
           </div>
-          <div style={{ display: 'flex', flexDirection: "row", justifyContent: 'center', alignItems: 'center' }}>
-            <IconButton onClick={handleToggleVolumeOff}>
-              {volume.muted || volume === 0 ?
-                <VolumeOff />
-                : volume > 50 ?
-                  <VolumeUp />
-                  : <VolumeDown />
-              }
-            </IconButton>
+          <div className={classes.controls}>
             <Slider
-              aria-label="Volume"
-              size='small'
-              value={volume.muted ? volume.volumeOff : volume.volume}
-              style={{ height: '20%' }}
+              onMouseDown={handleSeekMouseDown}
+              onMouseUp={handleSeekMouseUp}
+              onChange={handleProgressChange}
+              value={played}
+              type="range"
               min={0}
               max={1}
               step={0.01}
-              onChange={handleOnChangeVolume} />
+            />
+            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+              <Typography variant="subtitle1" component="p"
+                color="textSecondary">
+                {formatDuration(playedSeconds)}
+              </Typography>
+              <Typography variant="subtitle1" component="p"
+                color="textSecondary">
+                {duration}
+              </Typography>
+            </div>
+            <div>
+              <IconButton onClick={handlePlayPrevSong}>
+                <SkipPrevious />
+              </IconButton>
+              <IconButton onClick={handleTogglePlay}>
+                {state.isPlaying ? <Pause className={classes.playIcon} /> : <PlayArrow className={classes.playIcon} />}
+              </IconButton>
+              <IconButton onClick={handlePlayNextSong}>
+                <SkipNext />
+              </IconButton>
+            </div>
+            <div className={classes.volume}>
+              <IconButton onClick={handleToggleVolumeOff}>
+                {volume.muted || volume === 0 ?
+                  <VolumeOff />
+                  : volume > 50 ?
+                    <VolumeUp />
+                    : <VolumeDown />
+                }
+              </IconButton>
+              <Slider
+                aria-label="Volume"
+                size='small'
+                value={volume.muted ? volume.volumeOff : volume.volume}
+                style={{ height: '20%' }}
+                min={0}
+                max={1}
+                step={0.01}
+                onChange={handleOnChangeVolume} />
+            </div>
           </div>
-          <Slider
-            onMouseDown={handleSeekMouseDown}
-            onMouseUp={handleSeekMouseUp}
-            onChange={handleProgressChange}
-            value={played}
-            type="range"
-            min={0}
-            max={1}
-            step={0.01}
-          />
         </div>
         <ReactPlayer
           onProgress={handleReactPlayerOnProgress}
@@ -211,10 +235,7 @@ const SongPlayer = (props) => {
           volume={volume.muted ? volume.volumeOff : volume.volume}
           width='0'
           height='0'
-        />
-        <CardMedia
-          className={classes.thumbnail}
-          image={state.song.thumbnail}
+          onDuration={DurationOfSong}
         />
       </Card>
       <QueueList queue={data.Queue} />
