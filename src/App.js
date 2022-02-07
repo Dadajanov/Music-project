@@ -12,12 +12,12 @@ function App() {
   const initialSongState = useContext(SongContext)
   const [state, dispatch] = useReducer(SongReducer, initialSongState)
   const greaterThanMd = useMediaQuery('(min-width:900px)')
-  const greaterThanSm = useMediaQuery('(min-width:600px)')
+
 
   return (
     <SongContext.Provider value={{ state, dispatch }}>
-      {greaterThanSm && <Header />}
-      <Grid container style={{ paddingTop: greaterThanSm ? '80px' : '10px' }}>
+      {greaterThanMd && <Header />}
+      <Grid container style={{ paddingTop: greaterThanMd ? '80px' : '280px' }}>
         <Grid item xs={12} md={7} >
           <AddSongs />
           <SongList />
@@ -37,7 +37,7 @@ function App() {
                 position: 'fixed',
                 width: '100%',
                 left: 0,
-                bottom: 0,
+                top: 0,
                 margin: '0 auto',
               }
           }

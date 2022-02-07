@@ -61,7 +61,7 @@ const SongPlayer = (props) => {
   const [volume, setVolume] = useState({
     muted: false,
     volumeOff: 0,
-    volume: JSON.parse(localStorage.getItem('volume')).volume || 0.5
+    volume: JSON.parse(localStorage.getItem('volume'))?.volume || 0.5
   })
 
   useEffect(() => {
@@ -130,7 +130,7 @@ const SongPlayer = (props) => {
 
   const handleToggleVolumeOff = () => {
     setVolume(prevState => ({
-      muted: !prevState.muted,
+      muted: true,
       volume: volume.volume,
       volumeOff: 0,
     }
@@ -139,6 +139,13 @@ const SongPlayer = (props) => {
     setVolume(prevState => ({
       ...prevState,
     }));
+    if (volume.muted) {
+      setVolume(prevState => ({
+        ...prevState,
+        muted: false
+      }));
+      localStorage.setItem('volume', JSON.stringify(volume))
+    }
   };
 
 
@@ -208,9 +215,9 @@ const SongPlayer = (props) => {
             </div>
             <div className={classes.volume}>
               <IconButton onClick={handleToggleVolumeOff}>
-                {volume.muted || volume === 0 ?
+                {volume.muted || volume.volume === 0 ?
                   <VolumeOff />
-                  : volume > 50 ?
+                  : volume.volume > 0.5 ?
                     <VolumeUp />
                     : <VolumeDown />
                 }
@@ -227,16 +234,16 @@ const SongPlayer = (props) => {
             </div>
           </div>
         </div>
-        <ReactPlayer
-          onProgress={handleReactPlayerOnProgress}
-          ref={ReactPlayerRef}
-          url={state.song.url}
-          playing={state.isPlaying}
-          volume={volume.muted ? volume.volumeOff : volume.volume}
-          width='0'
-          height='0'
-          onDuration={DurationOfSong}
-        />
+        <div style={{ width: 0, height: 0.1 }}>
+          <ReactPlayer
+            onProgress={handleReactPlayerOnProgress}
+            ref={ReactPlayerRef}
+            url={state.song.url}
+            playing={state.isPlaying}
+            volume={volume.muted ? volume.volumeOff : volume.volume}
+            onDuration={DurationOfSong}
+          />
+        </div>
       </Card>
       <QueueList queue={data.Queue} />
     </Fragment>
